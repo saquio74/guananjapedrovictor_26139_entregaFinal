@@ -1,6 +1,7 @@
 package com.techlab.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -11,14 +12,14 @@ import jakarta.persistence.Table;
 @Table(name = "productorder")
 @IdClass(ProductOrderId.class)
 public class ProductOrder {
-
+    
     @Id
     @ManyToOne
     @JoinColumn(name = "productId")
     private Product product;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "orderId")
     private Order order;
 

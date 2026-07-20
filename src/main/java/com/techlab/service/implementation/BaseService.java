@@ -22,7 +22,7 @@ public abstract class BaseService<TId, TE extends EntityBase<TId>, TD, Repo exte
 
     @Override
     public TD addEntity(TD dto) {
-        TE ent = mapper.toEntity(dto);
+        TE ent = createData(dto);
         repository.save(ent);
         return mapper.toDto(ent);
     }
@@ -30,13 +30,13 @@ public abstract class BaseService<TId, TE extends EntityBase<TId>, TD, Repo exte
     @Override
     public void delete(TId id) {
         repository.deleteById(id);
-
     }
 
     @Override
-    public TD getById(TId id) throws Exception{
+    public TD getById(TId id) throws Exception {
         TE ent = repository.getReferenceById(id);
-        if(ent  == null) throw new Exception("No se encontro la entidad");
+        if (ent == null)
+            throw new Exception("No se encontro la entidad");
         return mapper.toDto(ent);
     }
 
@@ -52,9 +52,19 @@ public abstract class BaseService<TId, TE extends EntityBase<TId>, TD, Repo exte
     @Override
     public TD updateEntity(TId id, TD dto) throws Exception {
         TE entity = this.repository.getReferenceById(id);
-        if(entity  == null) throw new Exception("No se encontro la entidad");
-        mapper.updateEntity(dto, entity);
+        if (entity == null)
+            throw new Exception("No se encontro la entidad");
+        updateData(dto, entity);
+        entity = repository.save(entity);
         return null;
     }
     
+
+    protected TE createData(TD dto) {
+        return mapper.toEntity(dto);
+    }
+
+    protected void updateData(TD dto, TE entity) {
+        mapper.updateEntity(dto, entity);
+    }
 }
